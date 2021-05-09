@@ -55,7 +55,7 @@ sudo service minidlna start
 
 # Clone and configure Little Backup Box
 cd
-git clone https://github.com/dmpop/little-backup-box.git
+git clone https://github.com/gregmag/little-backup-box.git
 echo -e '\nBAK_DIR="/home/'$USER'/BACKUP" # Home directory path' >>little-backup-box/scripts/config.cfg
 mkdir -p /home/$USER/BACKUP
 chown $USER:users -R /home/$USER/BACKUP
@@ -195,7 +195,7 @@ case $response in
 0)
     clear
     sudo apt install -y wiringpi i2c-tools
-    git clone https://github.com/dmpop/ssd1306_rpi.git
+    git clone https://github.com/gregmag/ssd1306_rpi.git
     cd ssd1306_rpi
     cc -o oled oled.c fontx.c -lwiringPi -lpthread -DI2C
     sudo cp oled /usr/local/bin/
