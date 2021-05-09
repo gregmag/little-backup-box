@@ -28,6 +28,8 @@ while [ -z "${STORAGE}" ]; do
   STORAGE=$(ls /dev/* | grep "$STORAGE_DEV" | cut -d"/" -f3)
 done
 
+sudo mkfs.exfat -n HBSYL /dev/sdb1
+
 # When the USB storage device is detected, mount it
 sudo mount /dev/"$STORAGE_DEV" "$STORAGE_MOUNT_POINT"
 
