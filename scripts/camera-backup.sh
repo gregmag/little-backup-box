@@ -59,6 +59,11 @@ gphoto2 --get-all-files --skip-existing
 
 ls /media/storage/vol_electro | grep -v '\.mp4$' | xargs rm
 
+LIST_FILE="$(mktemp)"
+printf "file '$PWD/%s'\n" *.MP4 > $LIST_FILE
+ffmpeg -f concat -safe 0 -i $LIST_FILE -c copy "$1"
+rm $LIST_FILE
+
 
 # If display support is enabled, notify that the backup is complete
 if [ $DISP = true ]; then
