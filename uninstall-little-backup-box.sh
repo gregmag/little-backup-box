@@ -18,7 +18,7 @@
 #######################################################################
 
 if [ -z "$USER" ]; then
-    USER="pi"
+    USER="greg"
 fi
 cp little-backup-box/scripts/config.cfg $HOME/config.cfg.bak
 cd
