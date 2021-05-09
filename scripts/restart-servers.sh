@@ -29,7 +29,7 @@ while [ -z "${STORAGE}" ]; do
 done
 
 # When the USB storage device is detected, mount it
-mount /dev/"$STORAGE_DEV" "$STORAGE_MOUNT_POINT"
+sudo mount /dev/"$STORAGE_DEV" "$STORAGE_MOUNT_POINT"
 
 
 
