@@ -49,12 +49,16 @@ fi
 # Obtain camera model
 # Create the target directory with the camera model as its name
 CAMERA=$(gphoto2 --summary | grep "Model" | cut -d: -f2 | tr -d '[:space:]')
-STORAGE_MOUNT_POINT="$BAK_DIR/$CAMERA"
+STORAGE_MOUNT_POINT="$BAK_DIR/Vol_Electro"
 sudo mkdir -p "$STORAGE_MOUNT_POINT"
 
 # Switch to STORAGE_MOUNT_POINT and transfer files from the camera
 cd "$STORAGE_MOUNT_POINT"
 gphoto2 --get-all-files --skip-existing
+
+
+ls /media/storage/vol_electro | grep -v '\.mp4$' | xargs rm
+
 
 # If display support is enabled, notify that the backup is complete
 if [ $DISP = true ]; then
