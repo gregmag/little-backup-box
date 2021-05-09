@@ -34,7 +34,7 @@ curl https://rclone.org/install.sh | sudo bash
 # Read user
 USER="$1"
 if [ -z "$USER" ]; then
-    USER="pi"
+    USER="greg"
 fi
 
 # Create the required directories
