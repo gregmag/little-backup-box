@@ -64,8 +64,11 @@ printf "file '$PWD/%s'\n" *.MP4 > $LIST_FILE
 ffmpeg -f concat -safe 0 -i $LIST_FILE -c copy MonVolElectrique.MP4
 rm $LIST_FILE
 
+sleep 5
 sudo umount /media/storage
+sleep 2
 sudo umount /media/greg/HBSYL
+sleep 2
 sudo eject /dev/sdb
 
 # If display support is enabled, notify that the backup is complete
