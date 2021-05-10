@@ -57,7 +57,7 @@ cd "$STORAGE_MOUNT_POINT"
 gphoto2 --get-all-files --skip-existing
 
 
-ls /media/storage/vol_electro | grep -v '\.mp4$' | xargs rm
+ls /media/storage/vol_electro | grep -v '\.MP4$' | xargs rm
 
 LIST_FILE="$(mktemp)"
 printf "file '$PWD/%s'\n" *.MP4 > $LIST_FILE
