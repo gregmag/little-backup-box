@@ -36,12 +36,18 @@ clear
 
 echo "Bonjour cher pilote"
 echo ""
-echo "Les données du stick seront écrasées, les vidéos seront copiées et la caméra effacée"
+echo "Ceci est le programme d'EFFACEMENT de caméra et stick et NON pas celui de copie"
 echo ""
 
-read -p "Êtes-vous sûr de vouloir continuer ? (tapez O pour oui ou n'importe quelle touche suvie de ENTER pour quitter) "
+read -p "Êtes-vous sûr de vouloir continuer ? (tapez O pour oui ou n'importe quelle touche suivie de ENTER pour quitter) "
 
 if [[ $REPLY =~ ^[0Oo]$ ]]
+then
+
+echo ""
+read -p "Voulez-vous effacer la caméra (c), le stick (s) ? "
+
+if [[ $REPLY =~ ^[Ss]$ ]]
 then
 
 echo ""
@@ -66,14 +72,19 @@ echo 'type=0B' | sudo sfdisk /dev/sdb
 clear
 
 sleep 3
-echo "$SUDOPASS" | sudo -S mkfs.fat -n HBSYL /dev/sdb1
-#echo "$SUDOPASS" | sudo -S mkfs.ntfs -Q -L HBSYL /dev/sdb1
+echo "$SUDOPASS" | sudo -S mkfs.fat -n USBDISK /dev/sdb1
 
 sleep 3
-# When the USB storage device is detected, mount it
-echo "$SUDOPASS" | sudo -S mount -o async /dev/"$STORAGE_DEV" "$STORAGE_MOUNT_POINT"
+echo "$SUDOPASS" | sudo -S umount /media/storage
+sleep 2
+echo "$SUDOPASS" | sudo -S umount /media/lsgt/HBSYL
+sleep 2
+echo "$SUDOPASS" | sudo -S udisksctl power-off -b /dev/sdb
 
-sleep 3
+
+elif [[ $REPLY =~ ^[Cc]$ ]]
+then
+
 
 # Reload minidlna
 
@@ -96,41 +107,17 @@ done
 echo " "
 echo "Caméra détectée"
 
-# Obtain camera model
-# Create the target directory with the camera model as its name
-CAMERA=$(gphoto2 --summary | grep "Model" | cut -d: -f2 | tr -d '[:space:]')
-STORAGE_MOUNT_POINT="$BAK_DIR/Vol_Electro"
-echo "$SUDOPASS" | sudo -S mkdir -p "$STORAGE_MOUNT_POINT"
 
-clear
-
-# Switch to STORAGE_MOUNT_POINT and transfer files from the camera
-cd "$STORAGE_MOUNT_POINT"
-echo "$SUDOPASS" | sudo -S gphoto2 --get-all-files --skip-existing --delete-all-files -f /store_00000004/DCIM --recurse
-#echo "$SUDOPASS" | sudo -S gphoto2 --get-all-files --skip-existing
-
-
-echo "$SUDOPASS" | sudo -S ls /media/storage
-echo "$SUDOPASS" | ls /media/storage/Vol_Electro | grep -v '\.MP4$' | sudo -S xargs rm
-
-#LIST_FILE="$(mktemp)"
-#printf "file '$PWD/%s'\n" *.MP4 > $LIST_FILE
-#ffmpeg -f concat -safe 0 -i $LIST_FILE -c copy MonVolElectrique.MP4
-#rm $LIST_FILE
-
-sleep 5
-echo "$SUDOPASS" | sudo -S umount /media/storage
-sleep 2
-echo "$SUDOPASS" | sudo -S umount /media/lsgt/HBSYL
-sleep 2
-echo "$SUDOPASS" | sudo -S udisksctl power-off -b /dev/sdb
-
-clear
+echo "$SUDOPASS" | sudo -S gphoto2 --delete-all-files -f /store_00000004/DCIM --recurse
 
 fi
 
+fi
+
+clear
+
 echo "Terminé !"
-echo "Vous pouvez débrancher la caméra et le stick USB"
+echo "Vous pouvez débrancher la caméra et/ou le stick USB"
 echo " "
 
 read -p "Pressez une touche pour fermer cette fenêtre ..."
