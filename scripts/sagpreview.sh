@@ -29,76 +29,20 @@ STORAGE_DEV="sda1"
 
 echo "Veuillez patienter ..."
 
-sleep 2
-echo "$SUDOPASS" | sudo -S umount /media/storage
-sleep 2
-echo "$SUDOPASS" | sudo -S umount /media/HBSYL
-sleep 2
-echo "$SUDOPASS" | sudo -S fusermount -u /media/gopro
-sleep 2
+sleep 1
 gio mount -li | awk -F= ' {if(index($2,"mtp") == 1)system("gio mount -u "$2)}'
 clear
 
 echo "Bonjour cher pilote"
 echo ""
-echo "Ceci est le programme d'EFFACEMENT de caméra et stick et NON pas celui de copie"
+echo "Vous allez pouvoir prévisualiser une partie de la vidéo ici"
 echo ""
-echo ""
-echo "Vous avez 30 secondes pour déconnecter la caméra ou le le stick avant EFFACEMENT"
-echo "Si c'est bien ce que vous voulez, patientez ..."
-sleep 30
+sleep 5
 
-#read -p "Êtes-vous sûr de vouloir continuer ? (tapez O pour oui ou n'importe quelle touche suivie de ENTER pour quitter) "
+#read -p "Êtes-vous sûr de vouloir continuer ? (tapez O pour oui ou n'importe quelle touche suvie de ENTER pour quitter) "
 
 #if [[ $REPLY =~ ^[0Oo]$ ]]
 #then
-
-echo ""
-#read -p "Voulez-vous effacer la caméra (c), le stick (s) ? "
-
-#if [[ $REPLY =~ ^[Ss]$ ]]
-#then
-
-echo ""
-echo "Veuillez insérer le stick USB du côté gauche"
-
-
-# Wait for a USB storage device (e.g., a USB flash drive)
-STORAGE=$(ls /dev/* | grep "$STORAGE_DISK" | cut -d"/" -f3)
-while [ -z "${STORAGE}" ]; do
-  sleep 1
-  STORAGE=$(ls /dev/* | grep "$STORAGE_DISK" | cut -d"/" -f3)
-done
-
-echo "Stick détecté"
-echo ""
-
-sleep 2
-echo "$SUDOPASS" | sudo -S umount /dev/sda1
-
-sleep 3
-echo 'type=0B' | sudo sfdisk /dev/sda
-clear
-
-sleep 3
-echo "$SUDOPASS" | sudo -S mkfs.fat -n USBDISK /dev/sda1
-
-sleep 3
-echo "$SUDOPASS" | sudo -S umount /media/storage
-sleep 2
-echo "$SUDOPASS" | sudo -S umount /media/pi/HBSYL
-sleep 2
-echo "$SUDOPASS" | sudo -S umount /media/HBSYL
-sleep 2
-echo "$SUDOPASS" | sudo -S umount /media/USBDISK
-sleep 2
-echo "$SUDOPASS" | sudo -S udisksctl power-off -b /dev/sda
-
-
-#elif [[ $REPLY =~ ^[Cc]$ ]]
-#then
-
-clear
 
 echo ""
 echo "En attente de la caméra"
@@ -114,24 +58,28 @@ done
 echo " "
 echo "Caméra détectée"
 
+#jmtpfs -o allow_other -o nonempty /media/gopro
+gio mount -li | awk -F= ' {if(index($2,"mtp") == 1)system("gio mount "$2)}'
 
-#echo "$SUDOPASS" | sudo -S gphoto2 --delete-all-files -f /store_00000004/DCIM --recurse
-echo 'y' | mtp-format
+#echo "$SUDOPASS" | sudo -S cp -vr "/media/gopro/GoPro MTP Client Disk Volume/DCIM/100GOPRO"/*.MP4 /media/storage/
+gio mount -li | awk -F= ' {if(index($2,"mtp") == 1)system("gio list -u "$2"GoPro\ MTP\ Client\ Disk\ Volume/DCIM/100GOPRO/")}' | grep '.MP4' | sed '1d;3,10d' | xargs -i gio open {}
 
 sleep 5
+
+gio mount -li | awk -F= ' {if(index($2,"mtp") == 1)system("gio mount -u "$2)}'
 echo "$SUDOPASS" | sudo -S fusermount -u /media/gopro
-
-#fi
-
-#fi
+sleep 1
 
 clear
 
+#fi
+
 echo "Terminé !"
-echo "Vous pouvez débrancher la caméra et/ou le stick USB"
+echo "Vous pouvez débrancher la caméra et le stick USB"
 echo " "
 
 sleep 30
+
 #read -p "Pressez une touche pour fermer cette fenêtre ..."
 
 # Power off
